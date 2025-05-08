@@ -30,7 +30,7 @@ const NavBar: React.FC<NavBarProps> = ({ onLanguageChange, onGenreChange, langua
         <AppBar position="fixed"> {/* Changed position to "fixed" */}
             <Toolbar>
                 <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-                    My Movie App
+                    MovixFlore
                 </Typography>
                 <Box sx={{ display: 'flex', gap: 2, alignItems: 'center' }}>
                     <FormControl size="small">

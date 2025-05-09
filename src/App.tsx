@@ -39,11 +39,24 @@ const App: React.FC = () => {
                     languages={languages}
                     genres={genres}
                 />
-                {/* Add padding-top to the content below the NavBar */}
-                <Box sx={{ paddingTop: '64px' }}> {/* Adjust '64px' based on your NavBar's height */}
+                <Box
+                    sx={{
+                        paddingTop: '64px',
+                        width: '100vw', // Set width to viewport width
+                        overflowX: 'hidden', // Prevent horizontal scrollbar
+                    }}
+                >
                     <Routes>
                         <Route path="/login" element={<LoginPage />} />
-                        <Route path="/" element={<HomePage />} />
+                        <Route
+                            path="/"
+                            element={
+                                <HomePage
+                                    selectedLanguage={selectedLanguage}
+                                    selectedGenre={selectedGenre}
+                                />
+                            }
+                        />
                         <Route path="/movie/:id" element={<MovieDetailsPage />} />
                         <Route path="/user" element={<UserAccount />} />
                         <Route path="*" element={<NotFoundPage />} />

@@ -2,6 +2,7 @@
 import React from 'react';
 import { AppBar, Toolbar, Typography, Button, Select, MenuItem, FormControl, InputLabel, Box } from '@mui/material';
 import { Link } from 'react-router-dom';
+import SearchBar from './SearchBar'; // Import SearchBar
 
 interface NavBarProps {
     onLanguageChange: (language: string) => void;
@@ -27,12 +28,13 @@ const NavBar: React.FC<NavBarProps> = ({ onLanguageChange, onGenreChange, langua
     };
 
     return (
-        <AppBar position="fixed"> {/* Changed position to "fixed" */}
+        <AppBar position="fixed">
             <Toolbar>
                 <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
                     MovixFlore
                 </Typography>
-                <Box sx={{ display: 'flex', gap: 2, alignItems: 'center' }}>
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+                    <SearchBar /> {/* Render SearchBar here */}
                     <FormControl size="small">
                         <InputLabel id="language-select-label">Language</InputLabel>
                         <Select

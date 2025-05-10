@@ -40,7 +40,7 @@ const HomePage: React.FC<HomePageProps> = ({ selectedLanguage, selectedGenre }) 
     useEffect(() => {
         const fetchAllMovies = async () => {
             try {
-                const res = await axios.get('http://localhost:5000/api/movies');
+                const res = await axios.get('https://movixflore-backend-1.onrender.com/api/movies');
                 if (res.data && Array.isArray(res.data.results)) {
                     setAllMovies(res.data.results);
                     setVisibleAllMovies(res.data.results.slice(0, initialLoadCount));
@@ -60,7 +60,7 @@ const HomePage: React.FC<HomePageProps> = ({ selectedLanguage, selectedGenre }) 
 
         const fetchTopRatedMovies = async () => {
             try {
-                const res = await axios.get('http://localhost:5000/api/top_rated_movies');
+                const res = await axios.get('https://movixflore-backend-1.onrender.com/api/top_rated_movies');
                 if (res.data && Array.isArray(res.data.results)) {
                     setTopRatedMovies(res.data.results);
                     setVisibleTopRatedMovies(res.data.results.slice(0, initialLoadCount));
@@ -104,7 +104,6 @@ const HomePage: React.FC<HomePageProps> = ({ selectedLanguage, selectedGenre }) 
 
     return (
         <div>
-            <h1>Welcome to the Home Page</h1>
             <p><strong>Selected Language:</strong> {selectedLanguage || "None"}</p>
             <p><strong>Selected Genre:</strong> {selectedGenre || "None"}</p>
 

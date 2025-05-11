@@ -14,7 +14,7 @@ interface Movie {
 
 interface MovieCardProps {
     movie: Movie;
-    onMovieClick: (movie: Movie) => void;
+    onMovieClick?: (movie: Movie) => void; // ✅ Made optional
 }
 
 const StyledCard = styled(Card)(({ theme }) => ({
@@ -30,10 +30,10 @@ const StyledCard = styled(Card)(({ theme }) => ({
 
 const StyledCardMedia = styled(CardMedia)({
     height: 300,
-});
+}) as typeof CardMedia;
 
 const MovieCard: React.FC<MovieCardProps> = ({ movie, onMovieClick }) => (
-    <StyledCard onClick={() => onMovieClick(movie)}>
+    <StyledCard onClick={() => onMovieClick?.(movie)}> {/* ✅ Safe optional click */}
         <StyledCardMedia
             component="img"
             image={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}

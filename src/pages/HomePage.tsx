@@ -113,8 +113,8 @@ const HomePage: React.FC<HomePageProps> = ({ selectedLanguage, selectedGenre }) 
                 <Container maxWidth="lg">
                     <Grid container spacing={2}>
                         {visibleAllMovies.map((movie) => (
-                            <Grid item xs={12} sm={6} md={4} lg={3} key={movie.id}>
-                                <Item>
+                            <Grid component="div">
+                            <Item  key={movie.id}>
                                     <MovieCard movie={movie} onMovieClick={() => handleMovieClick(movie)} />
                                 </Item>
                             </Grid>
@@ -138,8 +138,8 @@ const HomePage: React.FC<HomePageProps> = ({ selectedLanguage, selectedGenre }) 
                 <Container maxWidth="lg">
                     <Grid container spacing={2}>
                         {visibleTopRatedMovies.map((movie) => (
-                            <Grid item xs={12} sm={6} md={4} lg={3} key={movie.id}>
-                                <Item>
+                            <Grid component="div">
+                                <Item  key={movie.id}>
                                     <MovieCard movie={movie} onMovieClick={() => handleMovieClick(movie)} />
                                 </Item>
                             </Grid>

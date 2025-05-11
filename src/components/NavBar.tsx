@@ -1,8 +1,18 @@
-// components/NavBar.tsx
 import React from 'react';
-import { AppBar, Toolbar, Typography, Button, Select, MenuItem, FormControl, InputLabel, Box } from '@mui/material';
+import {
+    AppBar,
+    Toolbar,
+    Typography,
+    Button,
+    Select,
+    MenuItem,
+    FormControl,
+    InputLabel,
+    Box
+} from '@mui/material';
+import type { SelectChangeEvent } from '@mui/material';
 import { Link } from 'react-router-dom';
-import SearchBar from './SearchBar'; // Import SearchBar
+import SearchBar from './SearchBar';
 
 interface NavBarProps {
     onLanguageChange: (language: string) => void;
@@ -15,14 +25,14 @@ const NavBar: React.FC<NavBarProps> = ({ onLanguageChange, onGenreChange, langua
     const [selectedLanguageLocal, setSelectedLanguageLocal] = React.useState('');
     const [selectedGenreLocal, setSelectedGenreLocal] = React.useState('');
 
-    const handleLanguageChangeLocal = (event: React.ChangeEvent<{ value: string }>) => {
-        const language = event.target.value as string;
+    const handleLanguageChangeLocal = (event: SelectChangeEvent) => {
+        const language = event.target.value;
         setSelectedLanguageLocal(language);
         onLanguageChange(language);
     };
 
-    const handleGenreChangeLocal = (event: React.ChangeEvent<{ value: string }>) => {
-        const genre = event.target.value as string;
+    const handleGenreChangeLocal = (event: SelectChangeEvent) => {
+        const genre = event.target.value;
         setSelectedGenreLocal(genre);
         onGenreChange(genre);
     };
@@ -34,7 +44,7 @@ const NavBar: React.FC<NavBarProps> = ({ onLanguageChange, onGenreChange, langua
                     MovixFlore
                 </Typography>
                 <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-                    <SearchBar /> {/* Render SearchBar here */}
+                    <SearchBar />
                     <FormControl size="small">
                         <InputLabel id="language-select-label">Language</InputLabel>
                         <Select
@@ -48,10 +58,13 @@ const NavBar: React.FC<NavBarProps> = ({ onLanguageChange, onGenreChange, langua
                                 <em>None</em>
                             </MenuItem>
                             {languages.map((language) => (
-                                <MenuItem key={language} value={language}>{language}</MenuItem>
+                                <MenuItem key={language} value={language}>
+                                    {language}
+                                </MenuItem>
                             ))}
                         </Select>
                     </FormControl>
+
                     <FormControl size="small">
                         <InputLabel id="genre-select-label">Genre</InputLabel>
                         <Select
@@ -65,10 +78,13 @@ const NavBar: React.FC<NavBarProps> = ({ onLanguageChange, onGenreChange, langua
                                 <em>None</em>
                             </MenuItem>
                             {genres.map((genre) => (
-                                <MenuItem key={genre} value={genre}>{genre}</MenuItem>
+                                <MenuItem key={genre} value={genre}>
+                                    {genre}
+                                </MenuItem>
                             ))}
                         </Select>
                     </FormControl>
+
                     <Button color="inherit" component={Link} to="/">Home</Button>
                     <Button color="inherit" component={Link} to="/login">Login</Button>
                     <Button color="inherit" component={Link} to="/user">Account</Button>

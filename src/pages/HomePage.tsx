@@ -1,14 +1,16 @@
-// HomePage.tsx
-
+// pages/HomePage.tsx
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import {
-    Grid,
     Typography,
     Button,
     Box,
-    Container // Import the Container component
+    Container,
+    Grid,
 } from '@mui/material';
+import { styled } from '@mui/material/styles';
+import Paper from '@mui/material/Paper';
+
 import MovieCard from '../components/MovieCard';
 import MovieDetailsModal from '../components/MovieDetail';
 
@@ -35,51 +37,44 @@ const HomePage: React.FC<HomePageProps> = ({ selectedLanguage, selectedGenre }) 
     const [showTopRatedMoviesButton, setShowTopRatedMoviesButton] = useState(true);
     const [selectedMovie, setSelectedMovie] = useState<Movie | null>(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
+
     const initialLoadCount = 4;
 
+    const Item = styled(Paper)(({ theme }) => ({
+        padding: theme.spacing(1), // Added some padding for better visual spacing
+        textAlign: 'center',
+        color: theme.palette.text.secondary,
+        // The grid sizing should be applied to the Grid component, not the Paper
+    }));
+
     useEffect(() => {
-        const fetchAllMovies = async () => {
-            try {
-                const res = await axios.get('https://movixflore-backend-1.onrender.com/api/movies');
-                if (res.data && Array.isArray(res.data.results)) {
+        // Fetch all movies
+        axios
+            .get('https://movixflore-backend-1.onrender.com/api/movies')
+            .then((res) => {
+                if (res.data?.results?.length) {
                     setAllMovies(res.data.results);
                     setVisibleAllMovies(res.data.results.slice(0, initialLoadCount));
                     setShowAllMoviesButton(res.data.results.length > initialLoadCount);
-                } else {
-                    setAllMovies([]);
-                    setVisibleAllMovies([]);
-                    setShowAllMoviesButton(false);
                 }
-            } catch (err) {
+            })
+            .catch((err) => {
                 console.error('Error fetching all movies:', err);
-                setAllMovies([]);
-                setVisibleAllMovies([]);
-                setShowAllMoviesButton(false);
-            }
-        };
+            });
 
-        const fetchTopRatedMovies = async () => {
-            try {
-                const res = await axios.get('https://movixflore-backend-1.onrender.com/api/top_rated_movies');
-                if (res.data && Array.isArray(res.data.results)) {
+        // Fetch top-rated movies
+        axios
+            .get('https://movixflore-backend-1.onrender.com/api/top_rated_movies')
+            .then((res) => {
+                if (res.data?.results?.length) {
                     setTopRatedMovies(res.data.results);
                     setVisibleTopRatedMovies(res.data.results.slice(0, initialLoadCount));
                     setShowTopRatedMoviesButton(res.data.results.length > initialLoadCount);
-                } else {
-                    setTopRatedMovies([]);
-                    setVisibleTopRatedMovies([]);
-                    setShowTopRatedMoviesButton(false);
                 }
-            } catch (err) {
-                console.error('Error fetching top rated movies:', err);
-                setTopRatedMovies([]);
-                setVisibleTopRatedMovies([]);
-                setShowTopRatedMoviesButton(false);
-            }
-        };
-
-        fetchAllMovies();
-        fetchTopRatedMovies();
+            })
+            .catch((err) => {
+                console.error('Error fetching top-rated movies:', err);
+            });
     }, []);
 
     const handleShowAllMovies = () => {
@@ -103,19 +98,26 @@ const HomePage: React.FC<HomePageProps> = ({ selectedLanguage, selectedGenre }) 
     };
 
     return (
-        <div>
-            <p><strong>Selected Language:</strong> {selectedLanguage || "None"}</p>
-            <p><strong>Selected Genre:</strong> {selectedGenre || "None"}</p>
+        <Box>
+            <Typography variant="h6" gutterBottom>
+                <strong>Selected Language:</strong> {selectedLanguage || 'None'}
+            </Typography>
+            <Typography variant="h6" gutterBottom>
+                <strong>Selected Genre:</strong> {selectedGenre || 'None'}
+            </Typography>
 
+            {/* All Movies */}
             <Box mt={3}>
                 <Typography variant="h5" gutterBottom>
                     All Movies
                 </Typography>
-                <Container maxWidth="lg"> {/* Wrap Grid with Container */}
+                <Container maxWidth="lg">
                     <Grid container spacing={2}>
                         {visibleAllMovies.map((movie) => (
-                            <Grid item key={movie.id} xs={12} sm={6} md={4} lg={3}>
-                                <MovieCard movie={movie} onMovieClick={handleMovieClick} />
+                            <Grid key={movie.id} component="div"> {/* Added component="div" */}
+                                <Item>
+                                    <MovieCard movie={movie} onMovieClick={handleMovieClick} />
+                                </Item>
                             </Grid>
                         ))}
                     </Grid>
@@ -129,15 +131,18 @@ const HomePage: React.FC<HomePageProps> = ({ selectedLanguage, selectedGenre }) 
                 )}
             </Box>
 
+            {/* Top Rated Movies */}
             <Box mt={5}>
                 <Typography variant="h5" gutterBottom>
                     Top Rated Movies
                 </Typography>
-                <Container maxWidth="lg"> {/* Wrap Grid with Container */}
+                <Container maxWidth="lg">
                     <Grid container spacing={2}>
                         {visibleTopRatedMovies.map((movie) => (
-                            <Grid item key={movie.id} xs={12} sm={6} md={4} lg={3}>
-                                <MovieCard movie={movie} onMovieClick={handleMovieClick} />
+                            <Grid key={movie.id} component="div"> {/* Added component="div" */}
+                                <Item>
+                                    <MovieCard movie={movie} onMovieClick={handleMovieClick} />
+                                </Item>
                             </Grid>
                         ))}
                     </Grid>
@@ -151,8 +156,9 @@ const HomePage: React.FC<HomePageProps> = ({ selectedLanguage, selectedGenre }) 
                 )}
             </Box>
 
+            {/* Movie Details Modal */}
             <MovieDetailsModal open={isModalOpen} onClose={handleCloseModal} movie={selectedMovie} />
-        </div>
+        </Box>
     );
 };
 

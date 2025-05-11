@@ -7,9 +7,9 @@ import {
     Box,
     Container,
     Grid,
+    Paper,
 } from '@mui/material';
 import { styled } from '@mui/material/styles';
-import Paper from '@mui/material/Paper';
 
 import MovieCard from '../components/MovieCard';
 import MovieDetailsModal from '../components/MovieDetail';
@@ -28,6 +28,12 @@ interface HomePageProps {
     selectedGenre: string;
 }
 
+const Item = styled(Paper)(({ theme }) => ({
+    padding: theme.spacing(1),
+    textAlign: 'center',
+    color: theme.palette.text.secondary,
+}));
+
 const HomePage: React.FC<HomePageProps> = ({ selectedLanguage, selectedGenre }) => {
     const [allMovies, setAllMovies] = useState<Movie[]>([]);
     const [topRatedMovies, setTopRatedMovies] = useState<Movie[]>([]);
@@ -39,13 +45,6 @@ const HomePage: React.FC<HomePageProps> = ({ selectedLanguage, selectedGenre }) 
     const [isModalOpen, setIsModalOpen] = useState(false);
 
     const initialLoadCount = 4;
-
-    const Item = styled(Paper)(({ theme }) => ({
-        padding: theme.spacing(1), // Added some padding for better visual spacing
-        textAlign: 'center',
-        color: theme.palette.text.secondary,
-        // The grid sizing should be applied to the Grid component, not the Paper
-    }));
 
     useEffect(() => {
         // Fetch all movies
@@ -114,9 +113,9 @@ const HomePage: React.FC<HomePageProps> = ({ selectedLanguage, selectedGenre }) 
                 <Container maxWidth="lg">
                     <Grid container spacing={2}>
                         {visibleAllMovies.map((movie) => (
-                            <Grid key={movie.id} component="div"> {/* Added component="div" */}
+                            <Grid item xs={12} sm={6} md={4} lg={3} key={movie.id}>
                                 <Item>
-                                    <MovieCard movie={movie} onMovieClick={handleMovieClick} />
+                                    <MovieCard movie={movie} onMovieClick={() => handleMovieClick(movie)} />
                                 </Item>
                             </Grid>
                         ))}
@@ -139,9 +138,9 @@ const HomePage: React.FC<HomePageProps> = ({ selectedLanguage, selectedGenre }) 
                 <Container maxWidth="lg">
                     <Grid container spacing={2}>
                         {visibleTopRatedMovies.map((movie) => (
-                            <Grid key={movie.id} component="div"> {/* Added component="div" */}
+                            <Grid item xs={12} sm={6} md={4} lg={3} key={movie.id}>
                                 <Item>
-                                    <MovieCard movie={movie} onMovieClick={handleMovieClick} />
+                                    <MovieCard movie={movie} onMovieClick={() => handleMovieClick(movie)} />
                                 </Item>
                             </Grid>
                         ))}

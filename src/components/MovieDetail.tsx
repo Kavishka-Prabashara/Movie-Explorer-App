@@ -11,6 +11,12 @@ interface Movie {
     release_date?: string;
 }
 
+interface Video {
+    key: string;
+    type: string;
+    site: string;
+}
+
 interface MovieDetailsModalProps {
     open: boolean;
     onClose: () => void;
@@ -21,21 +27,21 @@ const MovieDetailsModal: React.FC<MovieDetailsModalProps> = ({ open, onClose, mo
     const [trailerKey, setTrailerKey] = useState<string | null>(null);
 
     useEffect(() => {
+        if (!movie) return;
+
         const fetchTrailer = async () => {
-            if (movie) {
-                try {
-                    const response = await axios.get(
-                        `https://api.themoviedb.org/3/movie/${movie.id}/videos?api_key=YOUR_API_KEY`
-                    );
-                    const videos = response.data.results;
-                    const trailer = videos.find(
-                        (vid: any) => vid.type === 'Trailer' && vid.site === 'YouTube'
-                    );
-                    setTrailerKey(trailer ? trailer.key : null);
-                } catch (error) {
-                    console.error('Error fetching trailer:', error);
-                    setTrailerKey(null);
-                }
+            try {
+                const response = await axios.get(
+                    `https://api.themoviedb.org/3/movie/${movie.id}/videos?api_key=YOUR_API_KEY`
+                );
+                const videos: Video[] = response.data.results;
+                const trailer = videos.find(
+                    (vid: Video) => vid.type === 'Trailer' && vid.site === 'YouTube'
+                );
+                setTrailerKey(trailer ? trailer.key : null);
+            } catch (error) {
+                console.error('Error fetching trailer:', error);
+                setTrailerKey(null);
             }
         };
 

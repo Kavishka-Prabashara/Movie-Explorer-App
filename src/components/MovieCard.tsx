@@ -1,53 +1,60 @@
-// MovieCard.tsx
-
+// components/MovieCard.tsx
 import React from 'react';
-import { Card, CardMedia, CardContent, Typography } from '@mui/material';
-import { styled } from '@mui/material/styles';
+import { Box, Typography } from '@mui/material';
 
-interface Movie {
+export interface Movie {
     id: number;
-    poster_path: string;
+    poster_path: string | null;
     title: string;
     vote_average: number;
-    // Add other relevant movie details here if needed by this component
 }
 
 interface MovieCardProps {
     movie: Movie;
-    onMovieClick?: (movie: Movie) => void; // ✅ Made optional
+    onMovieClick?: (id: number) => void;
 }
 
-const StyledCard = styled(Card)(({ theme }) => ({
-    borderRadius: theme.spacing(1),
-    boxShadow: '0px 4px 12px rgba(0, 0, 0, 0.1)',
-    transition: 'transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out',
-    '&:hover': {
-        transform: 'scale(1.05)',
-        boxShadow: '0px 8px 24px rgba(0, 0, 0, 0.15)',
-        cursor: 'pointer',
-    },
-}));
-
-const StyledCardMedia = styled(CardMedia)({
-    height: 300,
-}) as typeof CardMedia;
-
-const MovieCard: React.FC<MovieCardProps> = ({ movie, onMovieClick }) => (
-    <StyledCard onClick={() => onMovieClick?.(movie)}> {/* ✅ Safe optional click */}
-        <StyledCardMedia
-            component="img"
-            image={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
-            alt={movie.title}
-        />
-        <CardContent>
-            <Typography variant="h6" gutterBottom>
+const MovieCard: React.FC<MovieCardProps> = ({ movie, onMovieClick }) => {
+    return (
+        <Box
+            onClick={() => onMovieClick?.(movie.id)}
+            sx={{
+                padding: 1,
+                textAlign: 'center',
+                color: 'text.secondary',
+                cursor: 'pointer',
+                boxShadow: 2,
+                borderRadius: 2,
+                '&:hover': {
+                    transform: 'scale(1.03)',
+                    transition: 'transform 0.2s',
+                },
+            }}
+        >
+            {movie.poster_path ? (
+                <img
+                    src={`https://image.tmdb.org/t/p/w200${movie.poster_path}`}
+                    alt={movie.title}
+                    style={{ maxWidth: '100%', height: 'auto' }}
+                />
+            ) : (
+                <Box
+                    display="flex"
+                    justifyContent="center"
+                    alignItems="center"
+                    height={200}
+                    bgcolor="grey.300"
+                    color="grey.700"
+                >
+                    No Poster
+                </Box>
+            )}
+            <Typography variant="subtitle1" mt={1} noWrap>
                 {movie.title}
             </Typography>
-            <Typography variant="body2" color="text.secondary">
-                Rating: {movie.vote_average}
-            </Typography>
-        </CardContent>
-    </StyledCard>
-);
+            <Typography variant="body2">Rating: {movie.vote_average}</Typography>
+        </Box>
+    );
+};
 
 export default MovieCard;

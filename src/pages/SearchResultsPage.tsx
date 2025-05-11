@@ -1,17 +1,12 @@
-// pages/SearchResultsPage.tsx
 import React, { useState, useEffect } from 'react';
-import { useSearchParams } from 'react-router-dom';
-import { searchMovies } from '../utils/api.ts';
-import { Grid, Typography, Box, CircularProgress, Container } from '@mui/material';
-import MovieCard from '../components/MovieCard.tsx';
-
-interface Movie {
-    id: number;
-    poster_path: string;
-    title: string;
-    vote_average: number;
-    // Add other relevant properties if needed
-}
+import { useSearchParams, useNavigate } from 'react-router-dom';
+import { searchMovies } from '../utils/api';
+import Typography from '@mui/material/Typography';
+import Box from '@mui/material/Box';
+import CircularProgress from '@mui/material/CircularProgress';
+import Container from '@mui/material/Container';
+import Grid from '@mui/material/Grid';
+import MovieCard, { type Movie } from '../components/MovieCard';
 
 const SearchResultsPage: React.FC = () => {
     const [searchParams] = useSearchParams();
@@ -19,9 +14,10 @@ const SearchResultsPage: React.FC = () => {
     const [searchResults, setSearchResults] = useState<Movie[]>([]);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
+    const navigate = useNavigate();
 
     useEffect(() => {
-        const fetchSearchResults = async () => {
+        const fetchSearchResults = async (): Promise<void> => {
             if (!query) {
                 setSearchResults([]);
                 setLoading(false);
@@ -34,16 +30,22 @@ const SearchResultsPage: React.FC = () => {
             try {
                 const data = await searchMovies(query);
                 setSearchResults(data.results || []);
-                setLoading(false);
-            } catch (err: any) {
+            } catch (err: unknown) {
                 setError('Failed to load search results.');
+                if (err instanceof Error) {
+                    console.error(err.message);
+                }
+            } finally {
                 setLoading(false);
-                console.error(err);
             }
         };
 
-        fetchSearchResults();
+        void fetchSearchResults();
     }, [query]);
+
+    const handleMovieClick = (movieId: number) => {
+        navigate(`/movie/${movieId}`);
+    };
 
     if (loading) {
         return (
@@ -69,9 +71,7 @@ const SearchResultsPage: React.FC = () => {
             {searchResults.length > 0 ? (
                 <Grid container spacing={2}>
                     {searchResults.map((movie) => (
-                        <Grid item key={movie.id} xs={12} sm={6} md={4} lg={3}>
-                            <MovieCard movie={movie} />
-                        </Grid>
+                        <MovieCard movie={movie} onMovieClick={handleMovieClick} />
                     ))}
                 </Grid>
             ) : (
